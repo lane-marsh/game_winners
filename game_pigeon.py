@@ -9,18 +9,18 @@ class GamePigeon(object):
 
         wb = load_workbook(filename='all_words.xlsx')
         ws = wb.active
-        all_words_array = []
+        all_words = set()
 
         for row in ws.values:
             if row[0] is None:
                 break
-            all_words_array.append(row[0])
+            all_words.add(row[0])
 
-        return all_words_array
+        return all_words
 
     @staticmethod
-    def check_word(word, array):
-        if word in array:
+    def check_word(word, input_set):
+        if word in input_set:
             return True
         else:
             return False
@@ -79,11 +79,16 @@ class GamePigeon(object):
                                             if move6 not in temp_combo:
                                                 temp_combo.append(move6)
                                                 moves_list.append(temp_combo[:])
-                                                # for move7 in moves_dict[move6]:
-                                                    # if move7 not in temp_combo:
-                                                        # temp_combo.append(move7)
-                                                        # moves_list.append(temp_combo[:])
-                                                        # temp_combo.remove(move7)
+                                                for move7 in moves_dict[move6]:
+                                                    if move7 not in temp_combo:
+                                                        temp_combo.append(move7)
+                                                        moves_list.append(temp_combo[:])
+                                                        for move8 in moves_dict[move7]:
+                                                            if move8 not in temp_combo:
+                                                                temp_combo.append(move8)
+                                                                moves_list.append(temp_combo[:])
+                                                                temp_combo.remove(move8)
+                                                        temp_combo.remove(move7)
                                                 temp_combo.remove(move6)
                                         temp_combo.remove(move5)
                                 temp_combo.remove(move4)
@@ -104,11 +109,10 @@ class GamePigeon(object):
 
         final_list = []
 
-        for word in all_words_list:
-            if self.check_word(word, letter_combos):
+        for word in letter_combos:
+            if self.check_word(word, all_words_list):
                 final_list.append(word)
 
-        # final_list = list(dict.fromkeys(final_list))
         final_list.sort(key=lambda s: len(s))
         final_list = final_list[::-1]
         return final_list

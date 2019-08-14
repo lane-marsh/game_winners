@@ -79,6 +79,11 @@ class GamePigeon(object):
                                             if move6 not in temp_combo:
                                                 temp_combo.append(move6)
                                                 moves_list.append(temp_combo[:])
+                                                # for move7 in moves_dict[move6]:
+                                                    # if move7 not in temp_combo:
+                                                        # temp_combo.append(move7)
+                                                        # moves_list.append(temp_combo[:])
+                                                        # temp_combo.remove(move7)
                                                 temp_combo.remove(move6)
                                         temp_combo.remove(move5)
                                 temp_combo.remove(move4)
@@ -87,17 +92,24 @@ class GamePigeon(object):
 
         all_words_list = self.gen_words()
 
-        final_list = []
+        letter_combos = []
 
         for move in moves_list:
             word = ''
             for position in move:
                 word = word + letters_array[position - 1]
-            if self.check_word(word, all_words_list):
+            letter_combos.append(word)
+
+        letter_combos = list(dict.fromkeys(letter_combos))
+
+        final_list = []
+
+        for word in all_words_list:
+            if self.check_word(word, letter_combos):
                 final_list.append(word)
 
-        final_list = list(dict.fromkeys(final_list))
-        final_list.sort(key = lambda s: len(s))
+        # final_list = list(dict.fromkeys(final_list))
+        final_list.sort(key=lambda s: len(s))
         final_list = final_list[::-1]
         return final_list
 
@@ -133,4 +145,4 @@ def test_class(test_string):
     return test_game.word_hunt(test_string)
 
 
-print(test_class('iunvtyertnxoeaoa'))
+print(test_class('siprnhnctaeilseo'))
